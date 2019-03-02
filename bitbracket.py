@@ -1,24 +1,13 @@
 """
-bitbracket - A simulator for symmetric, single elimination brackets.
+A simulator for binary tree like, single elimination brackets.
 
-There are only three functions to be aware of in bitbracket:
-
-    champion(bitbracket, teams)
-        Take a bitbracket and list of team objects and return the team
-        object corresponding to the champion.
-
-    simulate(teams, p, n=1000)
-        Take a list of team objects, a probability function, and a
-        number of iterations and return a collections.Counter with
-        bitbracket keys.
-
-    translate(bitbracket, teams)
-        Take a bitbracket and list of team objects and return nested
-        lists of teams representing the rounds of the tournament. The
-        first entry contains all teams, the last entry is a list
-        containing only the champion.
+Functions:
+    champion: Return the champion of a bitbracket
+    simulate: Run n simulations of a tournament, return a Counter.
+    translate: Decode a bitbracket into tournament rounds.
 """
 import collections
+import math
 import random
 
 
@@ -43,6 +32,10 @@ def simulate(teams, p, n=1000):
     Returns:
         A collections.Counter object with bitbracket keys.
     """
+    _validate_teams(teams)
+    _validate_p(p, teams)
+    _validate_n(n)
+    
     counter = collections.Counter()
 
     for _ in range(n):
@@ -54,6 +47,9 @@ def simulate(teams, p, n=1000):
 
 def translate(bitbracket, teams):
     """Convert a bitbracket into nested lists of teams."""
+    _validate_bitbracket(bitbracket)
+    _validate_teams(teams)
+    
     teams = list(teams)
 
     bracket = [teams.copy()]
@@ -71,6 +67,9 @@ def translate(bitbracket, teams):
 
 def _simulation_iteration(teams, p):
     """Run a single simulation and return a bitbracket."""
+    _validate_teams(teams)
+    _validate_p(p, teams)
+    
     teams = list(teams)
 
     bitbracket = 0
@@ -82,6 +81,47 @@ def _simulation_iteration(teams, p):
             bitbracket += winner
 
     return bitbracket
+
+
+def _validate_bitbracket(bitbracket):
+    """Ensure the bitbracket is an integer."""
+    if type(bitbracket) is not int:
+        raise TypeError('bitbracket should be an integer.')
+
+
+def _validate_n(n):
+    """Ensure the number of iterations is valid."""
+    try:
+        assert type(n) is int
+        assert n > 0
+    except AssertionError:
+        raise ValueError('n must be an integer >= 1!')
+
+
+def _validate_p(p, teams):
+    """Ensure the probability function works with team objects."""
+    if not callable(p):
+        raise TypeError('p must be a function!')
+    
+    try:
+        chance = p(*teams[:2])
+    except BaseException:
+        raise ValueError('p must take two team object inputs!')
+
+    if type(chance) not in (int, float):
+        raise ValueError('p should return an integer or float probability!')
+
+
+def _validate_teams(teams):
+    """Ensure the teams input is valid."""
+    if type(teams) not in (list, tuple):
+        raise TypeError('teams must be a list or tuple of team objects!')
+    
+    if math.log(len(teams), 2) % 1 > 0 or len(teams) == 1:
+        raise ValueError('Invalid number of teams!')
+
+    if len(set(map(type, teams))) > 1:
+        raise TypeError('Team objects must all be the same type!')
 
 
 if __name__ == '__main__':
