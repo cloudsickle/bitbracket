@@ -20,6 +20,16 @@ class TestChampion(unittest.TestCase):
 
 class TestSimulate(unittest.TestCase):
 
+    def test_result(self):
+        teams = [1, 2, 3, 4]
+        p = lambda x, y: 1
+
+        c = bitbracket.simulate(teams, p, n=1)
+
+        bb = list(c.keys())[0]
+
+        self.assertEqual(bb, 0b111)
+
     def test_num_teams(self):
         p = lambda x, y: int(x < y)
 
