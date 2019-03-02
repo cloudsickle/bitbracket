@@ -7,7 +7,6 @@ Functions:
     translate: Decode a bitbracket into tournament rounds.
 """
 import collections
-import math
 import random
 
 
@@ -116,8 +115,9 @@ def _validate_teams(teams):
     """Ensure the teams input is valid."""
     if type(teams) not in (list, tuple):
         raise TypeError('teams must be a list or tuple of team objects!')
-    
-    if math.log(len(teams), 2) % 1 > 0 or len(teams) == 1:
+
+    num_teams = len(teams)
+    if num_teams < 2 or num_teams & (num_teams - 1):
         raise ValueError('Invalid number of teams!')
 
     if len(set(map(type, teams))) > 1:
