@@ -66,9 +66,6 @@ def translate(bitbracket, teams):
 
 def _simulation_iteration(teams, p):
     """Run a single simulation and return a bitbracket."""
-    _validate_teams(teams)
-    _validate_p(p, teams)
-    
     teams = list(teams)
 
     bitbracket = 0
