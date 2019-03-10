@@ -37,6 +37,7 @@ In this bracket, the first round consists of:
 2. Team 4 vs. Team 5
 3. Team 3 vs. Team 6
 4. Team 2 vs. Team 7
+
 The second round is played with the winners of the first round games, again taking two at a time.
 
 #### Probability Function
