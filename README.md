@@ -31,6 +31,7 @@ The teams should be ordered according to their bracket position. For example, co
 6. Team 6
 7. Team 2
 8. Team 7
+
 In this bracket, the first round consists of: 
 1. Team 1 vs. Team 8
 2. Team 4 vs. Team 5
