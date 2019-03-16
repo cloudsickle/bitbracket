@@ -6,7 +6,7 @@ A simulator for binary tree like, single elimination brackets.
 
 bitbracket is a module for running tournament simulations. A _bitbracket_ is an integer that represents the outcome of each game in the tournament. This compact storage method is useful when running many simulations.
 
-bitbracket is very easily adaptable to any project. All that is needed is team objects, and a probability function.
+bitbracket is very easily adaptable to any project. All that is needed is team objects, and a matchup function.
 
 ## Usage
 
@@ -14,7 +14,7 @@ bitbracket is very easily adaptable to any project. All that is needed is team o
 
 A simulation is run with the simulate function.
 
-    bitbracket.simulate(teams, p, n=1000)
+    bitbracket.simulate(teams, matchup, n=1000)
 
 Inputs and outputs are discussed below. 
 
@@ -40,15 +40,17 @@ In this bracket, the first round consists of:
 
 The second round is played with the winners of the first round games, again taking two at a time.
 
-#### Probability Function
+#### Matchup Function
 
-The p argument should be a function that takes two team objects as inputs, and returns the probability that the first team wins. For example, supposing the team objects had a seed attribute and you wanted a chalk bracket:
+The matchup argument should be a function that takes two team objects as inputs, and returns a 0 if the first team wins, or else a 1 (second team wins). For example, supposing the team objects had a seed attribute and you wanted a chalk bracket:
 
-    p = lambda x, y: int(x.seed <= y.seed)
+    matchup = lambda x, y: int(x.seed > y.seed)
 
-There is no check to ensure that the output of p is always in [0, 1], so don't mess up!
+Say x was seeded 5 and y was seeded 12. x.seed > y.seed is False, and int(False) = 0 meaning the 5 seed wins. If the teams were input in the reverse order, int(12 > 5) = 1, meaning the 5 seed wins again.
 
-Note that this function is supposed to return an _expectation_. Bitbracket calculates a random probability and compares that to the expectation to determine the winner. You can override this by calculating your own winner in p(), then returning 0 or 1 to force the outcome.
+Right now, the output is always checked to ensure a result equal to 0 or 1, but this may be removed in the future to improve performance. So, be sure this is all your function can return.
+
+Normally this function would calculate the odds of victory based on team stats, then add some element of randomness before retuning a winner. If the outcome of the matchup function is _always_ the same, then the resulting bracket will always be the same.
 
 #### Number of Iterations
 

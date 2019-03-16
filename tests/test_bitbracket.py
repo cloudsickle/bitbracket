@@ -22,66 +22,66 @@ class TestSimulate(unittest.TestCase):
 
     def test_result(self):
         teams = [1, 2, 3, 4]
-        p = lambda x, y: 1
+        matchup = lambda x, y: 1
 
-        c = bitbracket.simulate(teams, p, n=1)
+        c = bitbracket.simulate(teams, matchup, n=1)
 
         bb = list(c.keys())[0]
 
         self.assertEqual(bb, 0b111)
 
     def test_num_teams(self):
-        p = lambda x, y: int(x < y)
+        matchup = lambda x, y: int(x > y)
 
         teams = list(range(5))
         with self.assertRaises(ValueError):
-            bitbracket.simulate(teams, p)
+            bitbracket.simulate(teams, matchup)
 
         teams = [1]
         with self.assertRaises(ValueError):
-            bitbracket.simulate(teams, p)
+            bitbracket.simulate(teams, matchup)
 
     def test_different_team_object_types(self):
         teams = [1, '2', 3.0, 4]
-        p = lambda x, y: int(x < y)
+        matchup = lambda x, y: int(x > y)
 
         with self.assertRaises(TypeError):
-            bitbracket.simulate(teams, p)
+            bitbracket.simulate(teams, matchup)
 
     def test_wrong_teams_type(self):
         teams = list(range(4))
-        p = lambda x, y: int(x < y)
+        matchup = lambda x, y: int(x > y)
 
-        bitbracket.simulate(teams, p, n=1)
-        bitbracket.simulate(tuple(teams), p, n=1)
+        bitbracket.simulate(teams, matchup, n=1)
+        bitbracket.simulate(tuple(teams), matchup, n=1)
 
     def test_negative_n(self):
         teams = [1, 2]
-        p = lambda x, y: int(x < y)
+        matchup = lambda x, y: int(x > y)
 
         with self.assertRaises(ValueError):
-            bitbracket.simulate(teams, p, -1)
+            bitbracket.simulate(teams, matchup, -1)
 
-    def test_wrong_p_type(self):
+    def test_wrong_matchup_type(self):
         teams = [1, 2]
-        p = None
+        matchup = None
 
         with self.assertRaises(TypeError):
-            bitbracket.simulate(teams, p)
+            bitbracket.simulate(teams, matchup)
 
-    def test_wrong_p_inputs(self):
+    def test_wrong_matchup_inputs(self):
         teams = [1, 2]
-        p = lambda x: 1
+        matchup = lambda x: 0
 
         with self.assertRaises(ValueError):
-            bitbracket.simulate(teams, p)
+            bitbracket.simulate(teams, matchup)
 
-    def test_wrong_p_return_type(self):
+    def test_wrong_matchup_return_type(self):
         teams = [1, 2]
-        p = lambda x: 'a'
+        matchup = lambda x: 'a'
 
         with self.assertRaises(ValueError):
-            bitbracket.simulate(teams, p)
+            bitbracket.simulate(teams, matchup)
 
 
 class TestTranslate(unittest.TestCase):
