@@ -68,13 +68,18 @@ def _simulation_iteration(teams, matchup):
     teams = list(teams)
 
     bitbracket = 0
+    game = 0
     while len(teams) > 1:
         for i in range(len(teams)//2):
             winner = matchup(teams[i], teams[i+1])
             assert winner == 0 or winner == 1
             teams.pop(i + (1 - winner))
-            bitbracket <<= 1
-            bitbracket += winner
+            # bitbracket <<= 1
+            # bitbracket += winner
+            bitbracket += winner*(2**game)
+            game += 1
+
+    # bitbracket = int(bin(bitbracket)[-1:1:-1], 2)
 
     return bitbracket
 
